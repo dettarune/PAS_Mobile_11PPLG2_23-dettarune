@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:pas_mobile_11pplg2_23/pages/bookmark_page.dart';
 import 'package:pas_mobile_11pplg2_23/pages/profile_page.dart';
 import 'package:pas_mobile_11pplg2_23/pages/tv_show_page.dart';
 
@@ -8,7 +9,7 @@ class BottomNavController extends GetxController {
 
   final List<Widget> pages = [
     TvShowPage(),
-    TvShowPage(),
+    BookmarkPage(),
     ProfilePage()
   ];
 

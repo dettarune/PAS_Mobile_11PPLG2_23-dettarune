@@ -1,18 +1,12 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pas_mobile_11pplg2_23/controllers/bookmark_controller.dart';
-import 'package:pas_mobile_11pplg2_23/controllers/tv_show_controller.dart';
-import 'package:pas_mobile_11pplg2_23/models/bookmark_model.dart';
-import 'package:pas_mobile_11pplg2_23/models/tv_show_list_model.dart';
-
+import 'package:pas_mobile_11pplg2_23/models/tv_show_list_model.dart' as model;
 
 class TVShowCard extends StatelessWidget {
   final String tvShowName;
-  final Language language;
+  final model.Language language;
   final double? rating;
-  final String image;
+  final String? image;
+  final List<dynamic>? genres;
 
   const TVShowCard({
     super.key,
@@ -20,54 +14,110 @@ class TVShowCard extends StatelessWidget {
     required this.language,
     required this.rating,
     required this.image,
+    this.genres,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bookmarkController = Get.find<BookmarkController>();
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          )
+        ],
+      ),
 
-    return Obx(() {
-      final isSaved = bookmarkController.isBookmarked(tvShowName);
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+            child: Image.network(
+              image ?? '',
+              height: 180,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) {
+                return Container(
+                  height: 180,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, size: 40),
+                );
+              },
+            ),
+          ),
 
-      return Container(
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.only(bottom: 15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20)
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(tvShowName),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(language.toString()),
-                Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    bookmarkController.toggleBookmark(
-                      BookmarkModel(
-                        title: tvShowName,
-                        language: language,
-                        rating: rating,
-                        image: image,
-                      ),
-                    );
-                  },
-                  child: Icon(
-                    isSaved ? Icons.bookmark : Icons.bookmark_border,
-                    color: isSaved ? Colors.orange : Colors.grey,
+                Text(
+                  tvShowName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
                   ),
                 ),
-              ],
-            )
 
-          ],
-        )
-      );
-    });
+                const SizedBox(height: 6),
+
+                if (genres != null && genres!.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      genres!.first.toString(),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.blue.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(height: 6),
+
+                Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      rating?.toStringAsFixed(1) ?? "N/A",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    Text(
+                      language.name.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

@@ -8,10 +8,17 @@ class TvShowPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final controller = Get.find<TvShowController>();
+    final controller = Get.find<TvShowController>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          "TV Shows",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.grey[100],
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -21,17 +28,23 @@ class TvShowPage extends StatelessWidget {
           return const Center(child: Text("Tidak ada data TV SHOW"));
         }
 
-        return ListView.builder(
-          padding: EdgeInsets.all(20),
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            mainAxisExtent: 280, 
+          ),
           itemCount: controller.productResponse.length,
           itemBuilder: (context, index) {
             final item = controller.productResponse[index];
-
             return TVShowCard(
               tvShowName: item.name,
               language: item.language,
               rating: item.rating.average,
               image: item.image.medium,
+              genres: item.genres,
             );
           },
         );

@@ -1,8 +1,6 @@
-import 'package:pas_mobile_11pplg2_23/models/tv_show_list_model.dart';
-
 class BookmarkModel {
   final String title;
-  final Language language;
+  final String language;
   final double? rating;
   final String image;
 
@@ -24,10 +22,10 @@ class BookmarkModel {
 
   factory BookmarkModel.fromJson(Map<String, dynamic> json) {
     return BookmarkModel(
-      title: json["title"],
-      language: json["language"],
-      rating: json["rating"],
-      image: json["image"],
+      title: json["title"] ?? "",
+      language: json["language"] ?? "",
+      rating: json["rating"] != null ? (json["rating"] as num).toDouble() : null,
+      image: json["image"] ?? "",
     );
   }
 }
